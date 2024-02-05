@@ -35,9 +35,13 @@ function createBoard() {
         board.forEach(
             row => row.forEach(
                 column => {
-                    if (column.getID() === cell && column.getValue() === 0) {
+                    const columID = column.getID();
+                    const columnValue = column.getValue();
+
+                    if (columID === cell && columnValue === 0) {
                         column.setValue(token);
                     }
+
                 }))
     }
 
@@ -157,10 +161,46 @@ function gameController(
     return { playRound, getActivePlayer, getBoard: board.getBoard };
 }
 
-const game = gameController();
-game.playRound(1);
-game.playRound(2);
-game.playRound(5);
-game.playRound(3);
-game.playRound(9);
-game.playRound(4);
+function displayController() {
+    const turnDisplay = document.querySelector('.turn');
+    const boardDisplay = document.querySelector('.board');
+
+    const game = gameController();
+
+    const updateScreen = () => {
+        boardDisplay.innerHTML = '';
+
+        const board = game.getBoard()
+
+        board.forEach(
+            row => row.forEach(
+                cell => {
+                    const buttonEl = document.createElement('button');
+                    buttonEl.classList.add('cell');
+                    buttonEl.textContent = cell.getValue();
+                    buttonEl.dataset.id = cell.getID();
+
+                    boardDisplay.appendChild(buttonEl);
+                }))
+
+        turnDisplay.textContent = `${game.getActivePlayer().name}'s Turn.`;
+    }
+
+    function clickHandler(e) {
+        const id = Number(e.target.dataset.id);
+
+        if (e.target.localName === 'button') {
+            game.playRound(id);
+            updateScreen();
+        }
+
+    }
+
+    boardDisplay.addEventListener('click', clickHandler);
+
+
+
+    updateScreen();
+}
+
+displayController();
