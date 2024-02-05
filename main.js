@@ -38,7 +38,7 @@ function createBoard() {
                     const columID = column.getID();
                     const columnValue = column.getValue();
 
-                    if (columID === cell && columnValue === 0) {
+                    if (columID === cell && columnValue === '') {
                         column.setValue(token);
                     }
 
@@ -98,7 +98,7 @@ function createBoard() {
 }
 
 function createCell() {
-    let value = 0;
+    let value = '';
     let id;
 
     const getValue = () => value
@@ -121,11 +121,11 @@ function gameController(
     const players = [
         {
             name: playerOne,
-            token: 1
+            token: 'X'
         },
         {
             name: playerTwo,
-            token: 2
+            token: 'O'
         },
     ]
 
