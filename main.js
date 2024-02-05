@@ -3,14 +3,16 @@ function createBoard() {
     const columns = 3;
     const board = [];
 
+    let idIndex = 1;
+
     for (let row = 0; row < rows; row++) {
-        const newRow = [];
+        board[row] = [];
         for (let column = 0; column < columns; column++) {
-            const newCell = createCell();
-            // newCell.setID(`${row},${column}`);            
-            newRow.push(newCell);
+            const currentCell = createCell();
+            currentCell.setID(idIndex);
+            board[row].push(currentCell);
+            idIndex++;
         }
-        board.push(newRow);
     }
 
     const getBoard = () => board;
@@ -29,12 +31,14 @@ function createBoard() {
         console.log(boardToPrint);
     }
 
-    const dropToken = (row, column, token) => {
-        const selectedCell = board[row][column];
-
-        if (selectedCell.getValue() === 0) {
-            selectedCell.setValue(token);
-        }
+    const dropToken = (cell, token) => {
+        board.forEach(
+            row => row.forEach(
+                column => {
+                    if (column.getID() === cell && column.getValue() === 0) {
+                        column.setValue(token);
+                    }
+                }))
     }
 
     const checkForWinner = (player) => {
@@ -127,10 +131,10 @@ function gameController(
 
     const switchActivePlayer = () => activePlayer = activePlayer === players[0] ? players[1] : players[0];
 
-    const playRound = (row, column) => {
+    const playRound = (cell) => {
         console.log(`${activePlayer.name} is dropping a token...`);
 
-        board.dropToken(row, column, activePlayer.token);
+        board.dropToken(cell, activePlayer.token);
 
         const isWinner = board.checkForWinner(activePlayer);
 
@@ -150,13 +154,13 @@ function gameController(
 
     setRound();
 
-    return { playRound, getActivePlayer }
+    return { playRound, getActivePlayer, getBoard: board.getBoard };
 }
 
 const game = gameController();
-game.playRound(0, 2);
-game.playRound(0, 2);
-game.playRound(1, 1);
-game.playRound(1, 2);
-game.playRound(2, 0);
-game.playRound(1, 2);
+game.playRound(1);
+game.playRound(2);
+game.playRound(5);
+game.playRound(3);
+game.playRound(9);
+game.playRound(4);
